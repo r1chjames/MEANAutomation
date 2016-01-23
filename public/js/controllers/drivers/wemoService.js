@@ -1,10 +1,14 @@
 var http = require('http');
 
-angular.module('wemoController', [])
+angular.module('wemoSerice', []);
 
-wemoController.factory('wemoController', function($scope,addr) {
-    var setStatus = function(addr) {
-    	var status;
+
+// .config( function( LogglyLoggerProvider ) {
+// 	    LogglyLoggerProvider.inputToken( '87c1dd30-d309-437e-bcce-0492a94bf316' ).sendConsoleErrors(true);
+//     });
+
+.directive('setStatus', function factory(addr) {
+	var status;
     	var state = 1;
     	
     	var body = body = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
@@ -29,22 +33,22 @@ wemoController.factory('wemoController', function($scope,addr) {
         }
     };
     
-    var req = http.request( postRequest, function( res )    {
+    var req = http.request( postRequest, function( res ) {
     
        console.log( res.statusCode );
        var buffer = "";
        res.on( "data", function( data ) { buffer = buffer + data; } );
-       res.on( "end", function( data ) { console.log( buffer ); } );
+       res.on( "end", function( data ) { console.log( buffer ); loggly.log( buffer );} );
     
     });
     
     req.on('error', function(e) {
-        console.log('problem with request: ' + e.message);
+        console.log('Problem with request: ' + e.message);
+        loggly.log('Problem with request' + e.message);
     });
     
     req.write( body );
     req.end();
     	
-    }
+    });
 
-});

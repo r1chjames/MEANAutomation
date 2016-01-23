@@ -1,0 +1,22 @@
+{
+  "name": "MEANAutomation",
+  "description": "MEAN Stack Home Automation",
+  "main": "server.js",
+  "authors": [
+    "Richard James"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/r1chjames/MEANAutomation",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.16",
+    "angular-loggly-logger": "~0.2.0"
+  }
+}
