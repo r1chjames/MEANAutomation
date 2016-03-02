@@ -1,74 +1,204 @@
-<!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="bogoTodo">
-<head>
-    <!-- META -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
-
-    <title>Node/Angular Todo App</title>
-
-    <!-- SCROLLS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-    <style>
-        html                    { overflow-y:scroll; }
-        body                    { padding-top:50px; }
-        #todo-list              { margin-bottom:30px; }
-    </style>
-
-    <!-- SCRIPTS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script><!-- load angular -->
-    <script src="js/core.js"></script>
-    <script src="js/controllers/mainController.js"></script> <!-- load up our controller -->
-    <script src="js/controllers/drivers/wemoService.js"></script> <!-- load up our controller -->
-    <script src="js/services/todos.js"></script> <!-- load our todo service -->
-    <script src="js/core.js"></script> <!-- load our main application -->
-    <script src="js/services/loggerService.min.js"></script>
-
-</head>
-<!-- SET THE CONTROLLER AND GET ALL TODOS -->
-<body>
-    <div class="container" ng-controller="mainController">
-
-        <!-- HEADER AND TODO COUNT -->
-        <div class="jumbotron text-center">
-            <h1>My Todo List <span class="label label-info">{{ todos.length }}</span></h1>
-        </div>
-
-        <!-- TODO LIST -->
-        <div id="todo-list" class="row">
-            <div class="col-sm-4 col-sm-offset-4">
-
-                <!-- LOOP OVER THE TODOS IN $scope.todos -->
-                <div class="checkbox" ng-repeat="todo in todos">
-                    <label>
-                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
-                    </label>
+<html lang="en" ng-app="StarterApp">
+    <head>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.4/angular-material.min.css">
+        <link rel="stylesheet" href="styles/style.css">
+        <title>Chilli Dashboard</title>
+    </head>
+    <body layout="row" ng-controller="AppCtrl">
+        <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+        <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+          <md-toolbar class="md-tall md-hue-2">
+            <span flex></span>
+            <div layout="column" class="md-toolbar-tools-bottom inset">
+              <user-avatar>
+                  <svg id="userAvatar"  height="64" width="64" class="user-avatar" viewBox="0 0 128 128" pointer-events="none" display="block" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                      <image x="0" y="0" height="64" width="64"  xlink:href="styles/chilli.png" />
+                  </svg>
+              </user-avatar>
+              <span></span>
+              <div ng-repeat="user in users">{{user.name}}</div>
+              <div>{{user.email}}</div>
+            </div>
+          </md-toolbar>
+          <md-list>
+          <md-item ng-repeat="item in menu">
+            <a>
+              <md-item-content md-ink-ripple layout="row" layout-align="start center">
+                <div class="inset">
+                  <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
                 </div>
-
+                <div class="inset">{{item.title}}
+                </div>
+              </md-item-content>
+            </a>
+          </md-item>
+          <md-divider></md-divider>
+          <md-subheader>Management</md-subheader>
+          <md-item ng-repeat="item in admin">
+            <a>
+              <md-item-content md-ink-ripple layout="row" layout-align="start center">
+                <div class="inset">
+                  <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                </div>
+                <div class="inset">{{item.title}}
+                </div>
+              </md-item-content>
+            </a>
+          </md-item>
+        </md-list>
+        </md-sidenav>
+        <div layout="column" class="relative" layout-fill role="main">
+          <md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event)">
+            <ng-md-icon icon="add"></ng-md-icon>
+          </md-button>
+          <md-toolbar ng-show="!showSearch">
+            <div class="md-toolbar-tools">
+              <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
+                <ng-md-icon icon="menu"></ng-md-icon>
+              </md-button>
+              <h3>
+                Chilli Dashboard
+              </h3>
+              <span flex></span>
+              <md-button aria-label="Search" ng-click="showSearch = !showSearch">
+                <ng-md-icon icon="search"></ng-md-icon>
+              </md-button>
+              <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
+                <ng-md-icon icon="more_vert"></ng-md-icon>
+              </md-button>
             </div>
-        </div>
-
-        <!-- FORM TO CREATE TODOS -->
-        <div id="todo-form" class="row">
-            <div class="col-sm-8 col-sm-offset-2 text-center">
-                <form>
-                    <div class="form-group">
-
-                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-                        <input type="text" class="form-control input-lg text-center" placeholder="I want to detect/capture dark matter" ng-model="formData.text">
-                    </div>
-
-                    <!-- createToDo() WILL CREATE NEW TODOS -->
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">Add</button>
-                </form>
+            <md-tabs md-stretch-tabs class="md-primary" md-selected="data.selectedIndex">
+              <md-tab id="tab1" aria-controls="tab1-content">
+                Drivers
+              </md-tab>
+              <md-tab id="tab2" aria-controls="tab2-content">
+                Activity
+              </md-tab>
+            </md-tabs>
+          </md-toolbar>
+          <md-toolbar class="md-hue-1" ng-show="showSearch">
+            <div class="md-toolbar-tools">
+              <md-button ng-click="showSearch = !showSearch" aria-label="Back">
+                <ng-md-icon icon="arrow_back"></ng-md-icon>
+              </md-button>
+              <h3 flex="10">
+                Back
+              </h3>
+              <md-input-container md-theme="input" flex>
+                <label>&nbsp;</label>
+                <input ng-model="search.who" placeholder="enter search">
+              </md-input-container>
+              <md-button aria-label="Search" ng-click="showSearch = !showSearch">
+                <ng-md-icon icon="search"></ng-md-icon>
+              </md-button>
+              <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
+                <ng-md-icon icon="more_vert"></ng-md-icon>
+              </md-button>
             </div>
+           
+          </md-toolbar>
+          <md-content flex md-scroll-y>
+            <ui-view layout="column" layout-fill layout-padding>
+              <div class="inset" hide-sm></div>
+                <ng-switch on="data.selectedIndex" class="tabpanel-container">
+                  <div role="tabpanel"
+                       id="tab1-content"
+                       aria-labelledby="tab1"
+                       ng-switch-when="0"
+                       md-swipe-left="next()"
+                       md-swipe-right="previous()"
+                       layout="row" layout-align="center center">
+                      <md-card flex-gt-sm="90" flex-gt-md="80">
+                        <md-card-content>
+                          <h2>Drivers</h2>
+                          <md-list>
+                            <md-item ng-repeat="driver in drivers | filter:search">
+                              <md-item-content>
+                                <div class="md-tile-left inset" hide-sm>
+                                    <driver-avatar></driver-avatar>
+                                </div>
+                                <div class="md-tile-content">
+                                  <h3>{{driver.name}}</h3>
+                                  <h4>{{driver.type}}</h4>
+                                  <p>
+                                    {{driver.status}}
+                                  </p>
+                                </div>
+                              </md-item-content>
+                              <md-divider md-inset hide-sm ng-if="!$last"></md-divider>
+                              <md-divider hide-gt-sm ng-if="!$last"></md-divider>
+                            </md-item>
+                            <md-divider></md-divider>
+                            <md-item layout class="inset">
+                                <md-button layout layout-align="start center" flex class="md-primary">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg> More
+                                </md-button>
+                            </md-item>
+                          </md-list>
+                        </md-card-content>
+                      </md-card>
+                  </div>
+                  <div role="tabpanel"
+                       id="tab2-content"
+                       aria-labelledby="tab2"
+                       ng-switch-when="1"
+                       md-swipe-left="next()"
+                       md-swipe-right="previous()" 
+                       layout="row" layout-align="center center">
+                      <md-card flex-gt-sm="90" flex-gt-md="80">
+                        <md-card-content>
+                          <h2>Activity</h2>
+                          <md-list>
+                            <md-item ng-repeat="activity in activity | filter:search | orderBy:'status'">
+                              <md-item-content>
+                                <div class="md-tile-left inset" hide-sm>
+                                    <driver-avatar></driver-avatar>
+                                </div>
+                                <div class="md-tile-content">
+                                  <h3>{{activity.title}}</h3>
+                                  <h4>{{activity.body}}</h4>
+                                  <p>
+                                    {{activity.datetime}}
+                                  </p>
+                                </div>
+                              </md-item-content>
+                              <md-divider md-inset hide-sm ng-if="!$last"></md-divider>
+                              <md-divider hide-gt-sm ng-if="!$last"></md-divider>
+                            </md-item>
+                            <md-divider></md-divider>
+                            <md-item layout class="inset">
+                                <md-button layout layout-align="start center" flex class="md-primary">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg> More
+                                </md-button>
+                            </md-item>
+                          </md-list>
+                        </md-card-content>
+                      </md-card>
+                  </div>
+                  
+              </ng-switch>
+              
+            </ui-view>
+          </md-content>
         </div>
-
-    </div>
-    <div class="container">
-        <button type="submit" ng-click="setStatus('192.168.0.28')">click me</a>
-    </div>
-
-</body>
+         <!-- SCRIPTS -->
+        <!-- Angular Material Dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-aria.min.js"></script>
+    
+        <!-- Angular Material Javascript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.4/angular-material.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script> 
+        
+        <!-- Internal Application Dependencies-->
+        <script type="text/javascript" src="js/Initial.js"></script>
+        <!--<script src="js/core.js"></script>-->
+        <!--<script src="js/controllers/mainController.js"></script> <!-- load up our controller -->
+        <!--<script src="js/controllers/drivers/wemoService.js"></script> <!-- load up our controller -->
+        <!--<script src="js/services/todos.js"></script> <!-- load our todo service -->
+        <!--<script src="js/core.js"></script> <!-- load our main application -->
+        <!--<script src="js/services/loggly.js"></script>-->
+        <script src="js/controllers/wemoController.js"></script>
+    </body>
 </html>

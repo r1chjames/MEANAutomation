@@ -1,10 +1,10 @@
 // js/controllers/main.js
-angular.module('todoController', [])
+angular.module('HomeAutoController', ['ngMaterial'])
 
     // inject the Todo service factory into our controller
-    .controller('mainController', function($scope, $http, Todos) {
+    .controller('HomeAutoController', function($scope, $http, Todos) {
         $scope.formData = {};
-
+        
         // GET =====================================================================
         // when landing on the page, get all todos and show them
         // use the service to get all the todos
